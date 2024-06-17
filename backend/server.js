@@ -1,8 +1,11 @@
 import app from "./src/app.js";
 import { config } from "./src/config/config.js";
-
+import connectDB from "./src/models/db.js";
 
 const startServer= async () => {
+  
+  await connectDB()
+  
   try {
     const PORT = config.port
     app.listen(PORT, () => {
@@ -13,4 +16,4 @@ const startServer= async () => {
   }
 }
 
-startServer()
+await startServer()
