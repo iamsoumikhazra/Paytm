@@ -9,7 +9,7 @@ import { config } from "../config/config.js";
 const signupRouter = express.Router();
 
 // Signup route with validation middleware
-signupRouter.post('/signup', validateSignup, async (req, res) => {
+signupRouter.post('/', validateSignup, async (req, res) => {
   const { firstName, lastName, email, password } = req.validatedUser;
 
   try {

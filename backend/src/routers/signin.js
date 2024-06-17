@@ -8,7 +8,7 @@ import { config } from "../config/config.js";
 const signinRouter = express.Router();
 
 // Signin route with validation middleware
-signinRouter.post('/signin', validateSignin, async (req, res) => {
+signinRouter.post('/', validateSignin, async (req, res) => {
   const { email, password } = req.validatedUser;
 
   try {
