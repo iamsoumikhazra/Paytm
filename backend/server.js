@@ -3,7 +3,7 @@ import { config } from "./src/config/config.js";
 import connectDB from "./src/models/db.js";
 
 const startServer= async () => {
-  
+
   await connectDB()
   
   try {
