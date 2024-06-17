@@ -1,0 +1,29 @@
+{
+  "tabWidth": 2,
+  "printWidth": 80,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "arrowParens": "avoid",
+  "endOfLine": "lf",
+  "semi": false,
+  "useTabs": false,
+  "overrides": [
+    {
+      "files": "*.md",
+      "options": {
+        "printWidth": 100
+      }
+    }
+  ],
+  "plugins": [
+    "prettier-plugin-tailwindcss"
+  ],
+  "parser": "babel",
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "requireConfig": true,
+  "pluginSearchDirs": true,
+  "ignorePath": ".prettierignore"
+}
