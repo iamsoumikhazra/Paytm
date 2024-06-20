@@ -27,7 +27,7 @@ export default function SignUp() {
       setCompletionMessage(data.message);
     } catch (error) {
       console.error('Error signing up', error);
-      setCompletionMessage(error.response.data.message);
+      setCompletionMessage( error.response.data.errors);
     }
   };
 
