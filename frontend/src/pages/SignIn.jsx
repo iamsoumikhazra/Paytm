@@ -1,7 +1,35 @@
-import { ArrowRight } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { useState } from 'react';
+import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 export default function SignIn() {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData({ ...formData, [id]: value });
+  };
+  const [completionMessage, setCompletionMessage] = useState('');
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:3000/signin', formData);
+      const { token } = response.data;
+      localStorage.setItem('jwtToken', token);
+      console.log(response.data);
+      const { data } = response;
+      setCompletionMessage(data.message);
+    } catch (error) {
+      console.error('Error signing in', error);
+      setCompletionMessage(error.response.data.message);
+    }
+  };
+
   return (
     <section>
       <div className="flex items-center justify-center px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
@@ -33,43 +61,46 @@ export default function SignIn() {
               Create a free account
             </Link>
           </p>
-          <form action="#" method="POST" className="mt-8">
+          <form onSubmit={handleSubmit} className="mt-8">
             <div className="space-y-5">
               <div>
-                <label htmlFor="" className="text-base font-medium text-gray-900">
-                  {' '}
-                  Email address{' '}
+                <label htmlFor="email" className="text-base font-medium text-gray-900">
+                  Email address
                 </label>
                 <div className="mt-2">
                   <input
+                    id="email"
                     className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                     type="email"
                     placeholder="Email"
-                  ></input>
+                    value={formData.email}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <label htmlFor="" className="text-base font-medium text-gray-900">
-                    {' '}
-                    Password{' '}
+                  <label htmlFor="password" className="text-base font-medium text-gray-900">
+                    Password
                   </label>
                   <a href="#" title="" className="text-sm font-semibold text-black hover:underline">
-                    {' '}
-                    Forgot password?{' '}
+                    Forgot password?
                   </a>
                 </div>
                 <div className="mt-2">
                   <input
+                    id="password"
                     className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                     type="password"
                     placeholder="Password"
-                  ></input>
+                    value={formData.password}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
               <div>
                 <button
-                  type="button"
+                  type="submit"
                   className="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-black/80"
                 >
                   Get started <ArrowRight className="ml-2" size={16} />
@@ -77,8 +108,9 @@ export default function SignIn() {
               </div>
             </div>
           </form>
+          {<p className="text-blue-600 text-center pt-4">{completionMessage}</p>}
         </div>
       </div>
     </section>
-  )
+  );
 }
