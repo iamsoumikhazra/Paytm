@@ -14,6 +14,14 @@ const signinSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters long"),
 });
 
+// Define the user update schema
+const updateSchema = z.object({
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  email: z.string().email("Invalid email address").optional(),
+  password: z.string().min(6, "Password must be at least 6 characters long").optional(),
+});
+
 // Middleware function for validating signup data
 const validateSignup = (req, res, next) => {
   const result = signupSchema.safeParse(req.body);
@@ -40,4 +48,17 @@ const validateSignin = (req, res, next) => {
   next();
 };
 
-export { validateSignup, validateSignin };
+// Middleware function for validating update data
+const validateUpdate = (req, res, next) => {
+  const result = updateSchema.safeParse(req.body);
+
+  if (!result.success) {
+    const errors = result.error.errors.map(err => err.message);
+    return res.status(400).json({ errors });
+  }
+
+  req.validatedUser = result.data; // Attach validated user data to the request object
+  next();
+};
+
+export { validateSignup, validateSignin, validateUpdate };

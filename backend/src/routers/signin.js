@@ -4,10 +4,11 @@ import jwt from 'jsonwebtoken';
 import User from '../models/users.model.js';
 import { validateSignin } from '../middlewares/userValidate.js';
 import { config } from "../config/config.js";
+import authenticate from '../middlewares/authenticate.js';
 
 const signinRouter = express.Router();
 
-// Signin route with validation middleware
+// Signin route with validation and authentication middleware
 signinRouter.post('/', validateSignin, async (req, res) => {
   const { email, password } = req.validatedUser;
 
@@ -38,3 +39,4 @@ signinRouter.post('/', validateSignin, async (req, res) => {
 });
 
 export default signinRouter;
+

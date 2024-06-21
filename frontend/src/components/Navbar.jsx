@@ -10,6 +10,10 @@ const menuItems = [
     name: 'Pay',
     href: '/pay',
   },
+  {
+    name: 'Update',
+    href: '/update',
+    }
 ]
 
 export default function Navbar() {

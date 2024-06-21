@@ -4,7 +4,7 @@ import './index.css'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Layout from './Layout'
 import {Hero, Pay} from './components/components.index.js'
-import {SignUp, SignIn} from './pages/pages.index.js'
+import {SignUp, SignIn, Update} from './pages/pages.index.js'
 
 
 
@@ -29,7 +29,10 @@ const router = createBrowserRouter([
         path: "/pay",
         element: <Pay />
       },
-      
+      {
+        path: "/update",
+        element: <Update />
+      }
     ]
   }
 ]);
