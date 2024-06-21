@@ -10,6 +10,7 @@ export default function Update() {
     email: '',
     password: '',
   });
+
   const [completionMessage, setCompletionMessage] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
@@ -28,7 +29,8 @@ export default function Update() {
             Authorization: `Bearer ${token}`,
           },
         });
-        setFormData(response.data); // Assuming the response structure
+        const { firstName, lastName, email } = response.data;
+        setFormData({ firstName, lastName, email });
         setIsAuthenticated(true);
       } catch (error) {
         console.error('Error fetching user data', error);
@@ -85,7 +87,10 @@ export default function Update() {
           </h2>
           <p className="mt-2 text-center text-base text-gray-600">
             Want to make changes to your account?{' '}
-            <Link to="/dashboard" className="font-medium text-black transition-all duration-200 hover:underline">
+            <Link
+              to="/"
+              className="font-medium text-black transition-all duration-200 hover:underline"
+            >
               Go to Dashboard
             </Link>
           </p>
@@ -101,7 +106,7 @@ export default function Update() {
                     type="text"
                     placeholder="First Name"
                     id="firstName"
-                    value={formData.firstName || ''}
+                    value={formData.firstName}
                     onChange={handleChange}
                   />
                 </div>
@@ -116,7 +121,7 @@ export default function Update() {
                     type="text"
                     placeholder="Last Name"
                     id="lastName"
-                    value={formData.lastName || ''}
+                    value={formData.lastName}
                     onChange={handleChange}
                   />
                 </div>
@@ -131,7 +136,7 @@ export default function Update() {
                     type="email"
                     placeholder="Email"
                     id="email"
-                    value={formData.email || ''}
+                    value={formData.email}
                     onChange={handleChange}
                   />
                 </div>
@@ -146,7 +151,7 @@ export default function Update() {
                     type="password"
                     placeholder="Password"
                     id="password"
-                    value={formData.password || ''}
+                    value={formData.password}
                     onChange={handleChange}
                   />
                 </div>
