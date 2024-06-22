@@ -8,7 +8,6 @@ const updateRouter = Router();
 updateRouter.put("/", authenticate, validateUpdate, async (req, res) => {
   const { firstName, lastName, email } = req.validatedUser;
   const userId = req.user.userId; // Get userId from the authenticated user
-  
 
   try {
     // Check if the user exists
@@ -24,7 +23,7 @@ updateRouter.put("/", authenticate, validateUpdate, async (req, res) => {
 
     await existingUser.save();
 
-    res.status(200).json({ message: 'User updated successfully', user: existingUser, existingUser });
+    res.status(200).json({ message: 'User updated successfully', user: existingUser });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }

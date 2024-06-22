@@ -1,5 +1,4 @@
 import express from 'express';
-import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/users.model.js';
 import { validateSignup } from '../middlewares/userValidate.js';

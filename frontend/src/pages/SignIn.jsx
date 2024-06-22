@@ -1,34 +1,41 @@
-import { useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function SignIn() {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
-
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData({ ...formData, [id]: value });
-  };
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [completionMessage, setCompletionMessage] = useState('');
-  
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:3000/signin', formData);
-      const { token } = response.data;
-      localStorage.setItem('jwtToken', token);
-      console.log(response.data);
-      const { data } = response;
-      setCompletionMessage(data.message);
-    } catch (error) {
-      console.error('Error signing in', error);
-      setCompletionMessage(error.response.data.message);
+  const navigate = useNavigate();
+
+  const handleChange = useCallback((e) => {
+    const { id, value } = e.target;
+    setFormData((prevFormData) => ({ ...prevFormData, [id]: value }));
+  }, []);
+
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      try {
+        const response = await axios.post('http://localhost:3000/signin', formData);
+        const { token, message } = response.data;
+        localStorage.setItem('jwtToken', token);
+        console.log(response.data);
+        setCompletionMessage(message);
+      } catch (error) {
+        console.error('Error signing in', error);
+        setCompletionMessage(error.response.data.message);
+      }
+    },
+    [formData]
+  );
+
+  useEffect(() => {
+    const token = localStorage.getItem('jwtToken');
+    if (token) {
+      navigate('/');
     }
-  };
+  }, [navigate]);
 
   return (
     <section>
@@ -51,7 +58,7 @@ export default function SignIn() {
           <h2 className="text-center text-2xl font-bold leading-tight text-black">
             Sign in to your account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600 ">
+          <p className="mt-2 text-center text-sm text-gray-600">
             Don&apos;t have an account?{' '}
             <Link
               to="/sign-up"
@@ -108,7 +115,9 @@ export default function SignIn() {
               </div>
             </div>
           </form>
-          {<p className="text-blue-600 text-center pt-4">{completionMessage}</p>}
+          {completionMessage && (
+            <p className="text-blue-600 text-center pt-4">{completionMessage}</p>
+          )}
         </div>
       </div>
     </section>

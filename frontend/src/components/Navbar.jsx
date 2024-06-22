@@ -1,27 +1,52 @@
-import { Menu, X } from 'lucide-react'
-import { NavLink,Link } from 'react-router-dom'
-import { useState } from 'react'
+import { Menu, X } from 'lucide-react';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
+
 const menuItems = [
-  {
-    name: 'Home',
-    href: '/',
-  },
-  {
-    name: 'Pay',
-    href: '/pay',
-  },
-  {
-    name: 'Update',
-    href: '/update',
-    }
-]
+  { name: 'Home', href: '/' },
+  { name: 'Pay', href: '/pay' },
+  { name: 'Update', href: '/update' },
+];
 
 export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [userData, setUserData] = useState({ firstName: '', lastName: '', email: '' });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen)
-  }
+  const fetchData = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      if (!token) {
+        navigate('/sign-in');
+        return;
+      }
+      const response = await axios.get('http://localhost:3000/user', {
+        headers: { Authorization: token },
+      });
+      const { firstName, lastName, email } = response.data;
+      setUserData({ firstName, lastName, email });
+      setIsAuthenticated(true);
+    } catch (error) {
+      console.error(`Error fetching user data: ${error}`);
+      navigate('/sign-in');
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem('jwtToken');
+    setIsAuthenticated(false);
+    navigate('/sign-in');
+  }, [navigate]);
+
+  const toggleMenu = useCallback(() => {
+    setIsMenuOpen((prev) => !prev);
+  }, []);
 
   return (
     <div className="relative w-full bg-white">
@@ -52,7 +77,8 @@ export default function Navbar() {
                   className={({ isActive }) =>
                     `text-sm font-semibold text-gray-800 ${
                       isActive ? 'bg-gray-900 rounded px-2 py-1.5 text-white' : ''
-                    }`}
+                    }`
+                  }
                 >
                   {item.name}
                 </NavLink>
@@ -61,18 +87,33 @@ export default function Navbar() {
           </ul>
         </div>
         <div className="hidden lg:block">
-          <button
-            type="button"
-            className="rounded-md bg-black px-3 py-2 mx-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-          >
-          <Link to="/sign-up">Sign up</Link>
-          </button>
-          <button
-            type="button"
-            className="rounded-md bg-white px-3 py-2 text-sm font-semibold text-black border border-black  shadow-sm hover:bg-green-500 hover:text-white hover:border-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-          >
-          <Link to="/sign-in">Sign in</Link>
-          </button>
+          {isAuthenticated ? (
+            <div className="flex items-center space-x-4">
+              <span className="text-sm font-semibold text-gray-800">Hello {userData.firstName}</span>
+              <button
+                type="button"
+                className="rounded-md bg-red-500 px-3 py-1 text-sm font-semibold text-white hover:bg-red-900"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <div className="flex space-x-4">
+              <Link
+                to="/sign-in"
+                className="rounded-md bg-white px-3 py-2 text-sm font-semibold text-black border border-black shadow-sm hover:bg-green-500 hover:text-white hover:border-green-500"
+              >
+                Sign in
+              </Link>
+              <Link
+                to="/sign-up"
+                className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80"
+              >
+                Sign up
+              </Link>
+            </div>
+          )}
         </div>
         <div className="lg:hidden">
           <Menu onClick={toggleMenu} className="h-6 w-6 cursor-pointer" />
@@ -102,46 +143,63 @@ export default function Navbar() {
                   <div className="-mr-2">
                     <button
                       type="button"
+                      className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
                       onClick={toggleMenu}
-                      className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                     >
-                      <span className="sr-only">Close menu</span>
-                      <X className="h-6 w-6" aria-hidden="true" />
+                      <X className="h-6 w-6" />
                     </button>
                   </div>
                 </div>
                 <div className="mt-6">
-                  <nav className="grid gap-y-4">
+                  <nav className="grid gap-y-8">
                     {menuItems.map((item) => (
                       <NavLink
                         key={item.name}
                         to={item.href}
-                        className="-m-3 flex items-center rounded-md p-3 text-sm font-semibold hover:bg-gray-50"
+                        className="text-sm font-semibold text-gray-800"
+                        onClick={toggleMenu}
                       >
-                        <span className="ml-3 text-base font-medium text-gray-900">
-                          {item.name}
-                        </span>
+                        {item.name}
                       </NavLink>
                     ))}
                   </nav>
                 </div>
-                <button
-                  type="button"
-                  className="mt-4 w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                >
-                 <Link to="/sign-up"> Sign up</Link>
-                </button>
-                <button
-                  type="button"
-                  className="mt-4 w-full rounded-md bg-white px-3 py-2 text-sm font-semibold text-black border border-black  shadow-sm hover:bg-green-500 hover:border-green-500  hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                >
-                 <Link to="/sign-in"> Sign in</Link>
-                </button>
+              </div>
+              <div className="px-5 pb-6 pt-5">
+                {isAuthenticated ? (
+                  <div className="space-y-6">
+                    <div className="flex items-center space-x-4">
+                      <span className="text-sm font-semibold text-gray-800">Hello {userData.firstName}</span>
+                      <button
+                        type="button"
+                        className="rounded-md bg-red-500 px-3 py-1 text-sm font-semibold text-white hover:bg-red-900"
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex space-x-4">
+                    <Link
+                      to="/sign-in"
+                      className="rounded-md bg-white px-3 py-2 text-sm font-semibold text-black border border-black shadow-sm hover:bg-green-500 hover:text-white hover:border-green-500"
+                    >
+                      Sign in
+                    </Link>
+                    <Link
+                      to="/sign-up"
+                      className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80"
+                    >
+                      Sign up
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }

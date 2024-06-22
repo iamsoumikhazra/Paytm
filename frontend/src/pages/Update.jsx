@@ -24,9 +24,9 @@ export default function Update() {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/users', {
+        const response = await axios.get('http://localhost:3000/user', {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: token,
           },
         });
         const { firstName, lastName, email } = response.data;
@@ -104,9 +104,8 @@ export default function Update() {
                   <input
                     className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                     type="text"
-                    placeholder="First Name"
                     id="firstName"
-                    value={formData.firstName}
+                    placeholder ={formData.firstName}
                     onChange={handleChange}
                   />
                 </div>
@@ -119,9 +118,8 @@ export default function Update() {
                   <input
                     className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                     type="text"
-                    placeholder="Last Name"
                     id="lastName"
-                    value={formData.lastName}
+                    placeholder={formData.lastName}
                     onChange={handleChange}
                   />
                 </div>
@@ -134,9 +132,8 @@ export default function Update() {
                   <input
                     className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                     type="email"
-                    placeholder="Email"
                     id="email"
-                    value={formData.email}
+                    placeholder={formData.email}
                     onChange={handleChange}
                   />
                 </div>
