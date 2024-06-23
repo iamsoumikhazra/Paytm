@@ -29,10 +29,9 @@ export default function Navbar() {
       setIsAuthenticated(true);
     } catch (error) {
       console.error(`Error fetching user data: ${error}`);
-      setIsAuthenticated(false);
       navigate('/sign-in');
     }
-  }, [navigate]);  
+  }, [navigate]);
 
   useEffect(() => {
     fetchData();
@@ -40,11 +39,10 @@ export default function Navbar() {
 
   const handleLogout = useCallback(() => {
     localStorage.removeItem('jwtToken');
-    setUserData({ firstName: '', lastName: '', email: '' });
     setIsAuthenticated(false);
     navigate('/sign-in');
   }, [navigate]);
-  
+
   const toggleMenu = useCallback(() => {
     setIsMenuOpen((prev) => !prev);
   }, []);
@@ -116,7 +114,7 @@ export default function Navbar() {
             </div>
           )}
         </div>
-
+        
         <div className="lg:hidden">
           <Menu onClick={toggleMenu} className="h-6 w-6 cursor-pointer" />
         </div>
