@@ -5,5 +5,6 @@ import signinRouter from "./signin.js";
 import usersRouter from "./users.js";
 import updateRouter from "./update.js";
 import userRouter from "./user.js";
+import usePay from "./pay.js";
 
-export  { homeRouter, errorRouter, signupRouter, signinRouter, usersRouter, updateRouter, userRouter }
+export  { homeRouter, errorRouter, signupRouter, signinRouter, usersRouter, updateRouter, userRouter, usePay}

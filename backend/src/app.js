@@ -1,5 +1,5 @@
 import express from "express";
-import { homeRouter, errorRouter, signupRouter, signinRouter,usersRouter ,userRouter, updateRouter} from "./routers/router.index.js";
+import { homeRouter, errorRouter, signupRouter, signinRouter,usersRouter ,userRouter, updateRouter, usePay} from "./routers/router.index.js";
 import cors from "cors";
 const app = express();
 
@@ -13,6 +13,6 @@ app.use('/signin',signinRouter)
 app.use('/users',usersRouter)
 app.use('/user',userRouter)
 app.use('/update',updateRouter)
-
+app.use('/pay',usePay)
 app.use('/error',errorRouter)
 export default app;
